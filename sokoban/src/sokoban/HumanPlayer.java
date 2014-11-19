@@ -40,7 +40,7 @@ public class HumanPlayer implements KeyListener{
         if(newState!=null){
             state=newState;
 //            state.printState();
-//            System.out.println();
+            System.out.println(state.isGoalState());
             display.updateState(newState);
         }
     }
@@ -50,7 +50,7 @@ public class HumanPlayer implements KeyListener{
     }
 
      public static void main(String[] args) throws Exception{
-        GameState state = args.length==0?new GameState("src/levels/level3.txt"):new GameState(args[0]);
+        GameState state = args.length==0?new GameState("src/levels/level5.txt"):new GameState(args[0]);
         HumanPlayer player = new HumanPlayer(state);                
     }
     

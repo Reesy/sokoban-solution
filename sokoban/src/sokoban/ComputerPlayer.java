@@ -4,6 +4,7 @@
  */
 package sokoban;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,15 +14,43 @@ import java.util.List;
 public class ComputerPlayer {
     
     GameDisplay display;
+    List frontier = new ArrayList<GameState>(); 
+    
     
     public ComputerPlayer(GameState state){
         display = new GameDisplay(state);
-        // your code goes here ...
+        GameState tempState;
+        int limit = 5;
+        frontier = EvaluateFn(state, frontier);
+        
+     
+
     }
-    
+    public List<GameState> EvaluateFn(GameState state, List<GameState> frontier){
+    	GameState stepState = null;
+    	
+    	while(state.isGoalState() == false){
+    		stepState = state.moveUp();
+    		frontier.add(stepState);
+    		
+    		state = stepState;
+    		
+    	}
+    	
+    	if(state.isGoalState()){
+    		
+    		System.out.println("FINISHED");
+    	}
+    	return frontier;
+    	
+	}
+	
     public List<GameState> getSolution(){
-        // your code goes here ...
-        return null;
+   
+        // frontier.add(state.moveUp());
+     //    frontier.add(state.moveLeft());
+    	// your code goes here ...
+    	return frontier;
     }
     
     public void showSolution(List<GameState> solution) {               
@@ -36,7 +65,7 @@ public class ComputerPlayer {
     }
     
     public static void main(String[] args) throws Exception{
-        GameState state = args.length==0?new GameState("src/levels/level3.txt"):new GameState(args[0]);        
+        GameState state = args.length==0?new GameState("src/levels/level6.txt"):new GameState(args[0]);        
         long t1 = System.currentTimeMillis();
         ComputerPlayer player = new ComputerPlayer(state);  
         List<GameState> solution = player.getSolution();
