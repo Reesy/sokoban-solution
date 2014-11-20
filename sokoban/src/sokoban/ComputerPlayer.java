@@ -45,14 +45,34 @@ public class ComputerPlayer {
     	
 	}
 	
-    
-    public void manhattenDistance(){
+    //takes position and a goal
+    public int manhattenDistance(GameState state){
+    	//gets player position
+    	int playerX = state.playerCol;    //this gets the player position on the x Axis
+    	int playerY = state.playerRow; 	  //this gets the player position on the y Axis
+    	
+    	
+    	
+    	//this gets the goal state closest to the player. 
+    	for(int K = 0; K < state.goalPositions.size(); K++){
+    		//this holds the x axis position of the currently accessed goal
+    		int tempX = state.goalPositions.get(K).col;
+    		int tempY = state.goalPositions.get(K).row;
+    		
+    		int currentXDistance = playerX - tempX;
+    		int currentYDistance = playerY - tempY;
+    		
+    		System.out.println("currentXDistance");
+    		System.out.println("currentYDistance");
+    		
+    		
+    		
+    	}
     	
     	
     	
     	
-    	
-    	
+    	return 0;
     }
     public List<GameState> getSolution(){
    

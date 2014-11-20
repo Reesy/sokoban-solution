@@ -49,10 +49,42 @@ public class HumanPlayer implements KeyListener{
             int test;
             int test2;
        
-  
+            //manhattan distance y + row, x + collumn
+            
+            
             test = state.goalPositions.get(0).col;
             test2 = state.goalPositions.get(0).row;
+            ////test code
+            
+            int playerX = state.playerCol;    //this gets the player position on the x Axis
+        	int playerY = state.playerRow; 	  //this gets the player position on the y Axis
+            
+            
+            
+            for(int K = 0; K < state.goalPositions.size(); K++){
+        		//this holds the x axis position of the currently accessed goal
+        		int tempX = state.goalPositions.get(K).col;
+        		int tempY = state.goalPositions.get(K).row;
+        		
+        		int currentXDistance = Math.abs(playerX - tempX);
+        		int currentYDistance = Math.abs(playerY - tempY);
+        		
+        		System.out.println("currentXDistance: " + currentXDistance);
+        		System.out.println("currentYDistance: " + currentYDistance);
+        		
+        		System.out.println("Manhattan Distance: " + (currentXDistance + currentYDistance));
+        		
+        	}
+            
+            
+            
+            
+            
+            
+            
+            
             System.out.println(test + " " + test2);
+            System.out.println("Number of goal positions: " + state.goalPositions.size());
             display.updateState(newState);
         }
     }
@@ -62,7 +94,7 @@ public class HumanPlayer implements KeyListener{
     }
 
      public static void main(String[] args) throws Exception{
-        GameState state = args.length==0?new GameState("src/levels/level5.txt"):new GameState(args[0]);
+        GameState state = args.length==0?new GameState("src/levels/level6.txt"):new GameState(args[0]);
         HumanPlayer player = new HumanPlayer(state);                
     }
     
