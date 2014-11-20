@@ -110,25 +110,41 @@ public class ComputerPlayer {
     	
     	return LegalStates;
     }
-    
+    //optimal leaf with manhattan distance.
     public GameState getOptimalLeaf(GameState state){
     	List<GameState> legalNodes = getLegalActions(state);
     	int h = 0;
+    	int g = 0;
+    	
+    	int lowestF = manhattanDistance(legalNodes.get(0)) + initialtoNodeDistance(legalNodes.get(0));
+    	//sets state with lowest F to the initial node in the legalNodes List
+    	GameState lowestConnectedNode = legalNodes.get(0);
     	
     	for(int i = 0; i < legalNodes.size(); i++){
     		/// h(n) estimation to go from the n to a goal state
     		h = manhattanDistance(legalNodes.get((i)));
+    		/// g(n) cost of the path from the initial state to node n (assuming each step equates to a cost of 1)
+    		g = initialtoNodeDistance(legalNodes.get(i));
     		
-    		
+    		if(h + g < lowestF){
+    			lowestF = h + g;
+    			lowestConnectedNode = legalNodes.get(i);
+    			
+    		}
     		
     	}
-    	return null;
+    	return lowestConnectedNode;
     }
     //this is extremely inefficient and may be removed when i work out how to do this.
-    public int initialtoNodeDistance(GameState stateN, int initialStateX, int initialStateY){
+    public int initialtoNodeDistance(GameState stateN){
     	
+    	int currentPX = stateN.playerCol;
+    	int currentPY = stateN.playerRow;
     	
-    	return null;
+    	int currentXDist = Math.abs(currentPX - initialPlayerStateX);
+    	int currentYDist = Math.abs(currentPY - initialPlayerStateY);
+    	
+    	return currentXDist + currentYDist;
     }
     
     //takes position and a goal returns the number of moves to the nearest goal position.
