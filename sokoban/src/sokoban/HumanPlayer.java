@@ -61,7 +61,7 @@ public class HumanPlayer implements KeyListener{
             
             
             
-            for(int K = 0; K < state.goalPositions.size(); K++){
+ /*           for(int K = 0; K < state.goalPositions.size(); K++){
         		//this holds the x axis position of the currently accessed goal
         		int tempX = state.goalPositions.get(K).col;
         		int tempY = state.goalPositions.get(K).row;
@@ -74,12 +74,48 @@ public class HumanPlayer implements KeyListener{
         		
         		System.out.println("Manhattan Distance: " + (currentXDistance + currentYDistance));
         		
+        	}*/
+        	int manhattendist = 0;
+            
+        	for(int K = 0; K < state.goalPositions.size(); K++){
+        		
+        	
+        		
+        		int tempX = state.goalPositions.get(K).col;
+        		int tempY = state.goalPositions.get(K).row;
+        		
+        		
+        		//this holds the x axis position of the currently accessed goal
+        		int currentXDistance = Math.abs(playerX - tempX);
+        		int currentYDistance = Math.abs(playerY - tempY);
+        		
+        		int tempManhattenDistance =  currentXDistance + currentYDistance;
+        				
+        		//this is used to store the manhattendistance of the first goal.
+        		if(K == 0){
+        			
+        			manhattendist = tempManhattenDistance;
+        			
+        		//if the manhattendistance for the currently checked goal is less than the one already stored.
+        		}else if(tempManhattenDistance < manhattendist){
+        			//assign the new shorter distance as the lowest manhatten distance.
+        			manhattendist = tempManhattenDistance;
+        			
+        		}
+        	
+        	
+        		
+      
+        	/*	System.out.println("currentXDistance: " + currentXDistance);
+        		System.out.println("currentYDistance: " + currentYDistance);
+        		
+        		System.out.println("Manhattan Distance: " + (currentXDistance + currentYDistance));*/
+        		
+        		
+        		
         	}
             
-            
-            
-            
-            
+        	System.out.println("lowest manhattan distance: " + manhattendist);
             
             
             
@@ -94,7 +130,7 @@ public class HumanPlayer implements KeyListener{
     }
 
      public static void main(String[] args) throws Exception{
-        GameState state = args.length==0?new GameState("src/levels/level6.txt"):new GameState(args[0]);
+        GameState state = args.length==0?new GameState("src/levels/level3.txt"):new GameState(args[0]);
         HumanPlayer player = new HumanPlayer(state);                
     }
     
