@@ -8,6 +8,8 @@ package sokoban;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import sokoban.GameState.Position;
+
 /**
  *
  * @author steven
@@ -41,6 +43,16 @@ public class HumanPlayer implements KeyListener{
             state=newState;
 //            state.printState();
             System.out.println(state.isGoalState());
+            System.out.println(state.playerCol + " " + state.playerRow); 
+       //     int test = state.goalPositions(0);
+            
+            int test;
+            int test2;
+       
+  
+            test = state.goalPositions.get(0).col;
+            test2 = state.goalPositions.get(0).row;
+            System.out.println(test + " " + test2);
             display.updateState(newState);
         }
     }

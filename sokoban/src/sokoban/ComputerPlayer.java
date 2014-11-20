@@ -45,6 +45,15 @@ public class ComputerPlayer {
     	
 	}
 	
+    
+    public void manhattenDistance(){
+    	
+    	
+    	
+    	
+    	
+    	
+    }
     public List<GameState> getSolution(){
    
         // frontier.add(state.moveUp());
