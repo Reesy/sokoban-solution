@@ -14,72 +14,165 @@ import java.util.List;
 public class ComputerPlayer {
     
     GameDisplay display;
-    List frontier = new ArrayList<GameState>(); 
-    
+    int initialPlayerStateX;
+    int initialPlayerStateY;
     
     public ComputerPlayer(GameState state){
         display = new GameDisplay(state);
-        GameState tempState;
-        int limit = 5;
-        frontier = EvaluateFn(state, frontier);
+        initialPlayerStateX = state.playerCol;
+        initialPlayerStateY = state.playerRow;
         
-     
-
     }
-    public List<GameState> EvaluateFn(GameState state, List<GameState> frontier){
-    	GameState stepState = null;
+    public List<GameState> EvaluateFn(GameState state){
     	
-    	while(state.isGoalState() == false){
-    		stepState = state.moveUp();
-    		frontier.add(stepState);
+        //  GameState tempState;
+        //  int limit = 5;
+        //  frontier = EvaluateFn(state, frontier);
+    	//openList
+    	List frontier = new ArrayList<GameState>(); 
+    	//closes list
+    	List closedList = new ArrayList<GameState>();
     		
-    		state = stepState;
-    		
-    	}
+    	//initialise frontier
     	
-    	if(state.isGoalState()){
-    		
-    		System.out.println("FINISHED");
-    	}
+    	frontier.add(state);
+    	
+    	
+        int[] pathCost = {0};
+          
+        int[] estimatedPathCost = null;
+        estimatedPathCost[0] = pathCost[0] + manhattanDistance(state); 
+          
+         
+        while(frontier.isEmpty() == false){
+        	//frontier.size();
+        	//gets last element
+        	closedList.add(frontier.get(0));
+        	GameState currentState = (GameState) frontier.get(0);    //might be bugged!
+        	frontier.remove(0);
+        	
+        
+        	
+        	if(state.isGoalState()){
+        		return frontier;
+          	}else{
+          		//this checks the Currently active node for the most optimum state. 
+          		frontier.add(getOptimalLeaf(currentState));
+          		
+          		
+          		
+          		
+          		
+          		
+          	//	for(int legalSearch = 0; legalSearch < getLegalActions(state).size(); legalSearch++){
+          		//	
+          		//	
+          		//	
+          	//	}
+          		
+          		
+          		
+          		
+          		
+          		
+          	}  	
+        }
     	return frontier;
     	
 	}
-	
-    //takes position and a goal
-    public int manhattenDistance(GameState state){
-    	//gets player position
-    	int playerX = state.playerCol;    //this gets the player position on the x Axis
-    	int playerY = state.playerRow; 	  //this gets the player position on the y Axis
+    
+   
+    public List<GameState> getLegalActions(GameState state){
+    	//A list containing legal leaf-nodes from given state.
+    	
+    	List<GameState> LegalStates = null; 
     	
     	
     	
-    	//this gets the goal state closest to the player. 
-    	for(int K = 0; K < state.goalPositions.size(); K++){
-    		//this holds the x axis position of the currently accessed goal
-    		int tempX = state.goalPositions.get(K).col;
-    		int tempY = state.goalPositions.get(K).row;
+    	if(state.moveLeftLegal() == true){
+    		LegalStates.add(state.moveLeft());
+    	}
+    	if(state.moveUpLegal() == true){
+    		LegalStates.add(state.moveUp());
+    	}
+    	if(state.moveRightLegal() == true){
+    		LegalStates.add(state.moveUp());
+    	}
+    	if(state.moveDownLegal() == true){
+    		LegalStates.add(state.moveDown());
+    	}
     		
-    		int currentXDistance = playerX - tempX;
-    		int currentYDistance = playerY - tempY;
-    		
-    		System.out.println("currentXDistance");
-    		System.out.println("currentYDistance");
+    	
+    	
+    	
+    	
+    	
+    	
+    	return LegalStates;
+    }
+    
+    public GameState getOptimalLeaf(GameState state){
+    	List<GameState> legalNodes = getLegalActions(state);
+    	int h = 0;
+    	
+    	for(int i = 0; i < legalNodes.size(); i++){
+    		/// h(n) estimation to go from the n to a goal state
+    		h = manhattanDistance(legalNodes.get((i)));
     		
     		
     		
     	}
-    	
-    	
-    	
-    	
-    	return 0;
+    	return null;
     }
+    //this is extremely inefficient and may be removed when i work out how to do this.
+    public int initialtoNodeDistance(GameState stateN, int initialStateX, int initialStateY){
+    	
+    	
+    	return null;
+    }
+    
+    //takes position and a goal returns the number of moves to the nearest goal position.
+    public int manhattanDistance(GameState state){
+    	//gets player position
+    	int playerX = state.playerCol;    //this gets the player position on the x Axis
+    	int playerY = state.playerRow; 	  //this gets the player position on the y Axis
+
+    	int manhattendist = 0;
+        
+    	//this loop returns the Manhattan distance towards the closest goal position.
+    	for(int K = 0; K < state.goalPositions.size(); K++){
+    		//x and y Co-ords of currently accessed goal.
+    		int tempX = state.goalPositions.get(K).col;
+    		int tempY = state.goalPositions.get(K).row;
+    		
+    		//this holds the x axis position of the currently accessed goal
+    		int currentXDistance = Math.abs(playerX - tempX);
+    		int currentYDistance = Math.abs(playerY - tempY);
+    		
+    		int tempManhattenDistance =  currentXDistance + currentYDistance;
+    				
+    		//checks for first goal position for initialisation purposes.
+    		if(K == 0){
+    			//this is used to store the manhattendistance of the first goal.
+    			manhattendist = tempManhattenDistance;
+    			
+    		//if the manhattendistance for the currently checked goal is less than the one already stored.
+    		}else if(tempManhattenDistance < manhattendist){
+    			//assign the new shorter distance as the lowest manhatten distance.
+    			manhattendist = tempManhattenDistance;
+    			
+    		}
+    	}
+    	
+    	return manhattendist;
+    }
+   
     public List<GameState> getSolution(){
    
         // frontier.add(state.moveUp());
      //    frontier.add(state.moveLeft());
     	// your code goes here ...
-    	return frontier;
+    	return null;
     }
     
     public void showSolution(List<GameState> solution) {               
