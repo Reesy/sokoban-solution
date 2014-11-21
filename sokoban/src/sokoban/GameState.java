@@ -27,6 +27,8 @@ public class GameState{
     int playerRow;
     int playerCol;
     List<Position> goalPositions;
+    
+    List<Position> failPositions;
 
     public GameState(String filename) throws Exception {
         BufferedReader in = new BufferedReader(new FileReader(filename));
@@ -49,13 +51,15 @@ public class GameState{
         findGoalPositions();
     }
 
-    public GameState(char[][] state, int playerRow, int playerCol, List<Position> goalPositions) {
+    public GameState(char[][] state, int playerRow, int playerCol, List<Position> goalPositions, List<Position> failPositions) {
         this.state = state;
         this.playerRow = playerRow;
         this.playerCol = playerCol;
         this.goalPositions = goalPositions;
+        this.failPositions = failPositions;
         height = state.length;
         width = state[0].length;
+        
     }
 
     private void findPlayer() {
@@ -165,7 +169,7 @@ public class GameState{
                     newState[row2][col2] = 'b';
                 }
             }
-            return new GameState(newState, row1, col1, goalPositions);
+            return new GameState(newState, row1, col1, goalPositions, failPositions);
         }
     }
 
@@ -212,7 +216,48 @@ public class GameState{
         }
         return true;
     }
+    
+    public int isAgainstWall(int blockRow, int blockCol){
+    	//checks to see if it's against a north wall
+        //check for top-left corner
+    	if ((blockRow < 0 || blockCol < 0 || blockRow >= height || blockCol >= width || state[blockRow - 1][blockCol] == 'w' && state[blockRow][blockCol - 1] == 'w')){
+    		
+    		return 1;
+    	//check for top-right corner
+    	}else if ((blockRow < 0 || blockCol < 0 || blockRow >= height || blockCol >= width || state[blockRow - 1][blockCol] == 'w' && state[blockRow][blockCol + 1] == 'w')){
+    		
+    		return 2;
+    		
+    	//check for bottom-left
+    	}else if ((blockRow < 0 || blockCol < 0 || blockRow >= height || blockCol >= width || state[blockRow + 1][blockCol] == 'w' && state[blockRow][blockCol - 1] == 'w')){
+    		
+    		return 3;
+    	//check for bottom right
+    	}else if ((blockRow < 0 || blockCol < 0 || blockRow >= height || blockCol >= width || state[blockRow + 1][blockCol] == 'w'  && state[blockRow][blockCol + 1] == 'w')){
+    		return 4;
+    	}
+    	//checks to see if it's against a north wall
+    	else if (blockRow < 0 || blockCol < 0 || blockRow >= height || blockCol >= width || state[blockRow - 1][blockCol] == 'w') {
+            return 5;
+         //check to see if it's a south wall
+        }else if ((blockRow < 0 || blockCol < 0 || blockRow >= height || blockCol >= width || state[blockRow + 1][blockCol] == 'w')){
+        	return 6;
+        //check to see if it's against a west wall
+        }else if((blockRow < 0 || blockCol < 0 || blockRow >= height || blockCol >= width || state[blockRow][blockCol - 1] == 'w')){
+        	return 7;
+        //check to see if it's against an east wall
+        }else if((blockRow < 0 || blockCol < 0 || blockRow >= height || blockCol >= width || state[blockRow][blockCol + 1] == 'w')){
+        	return 8;
+        }
+        
 
+    	
+    	return 0;
+    	
+    }
+    
+    
+    
     public int getWidth() {
         return width;
     }

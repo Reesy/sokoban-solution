@@ -31,206 +31,9 @@ public class ComputerPlayer {
         initialPlayerStateY = MyState.playerRow;
         
     }
-/*    public List<GameState> EvaluateFn(GameState state){
 
-    	
-    	List graph = new ArrayList<GameState>();
-    	graph.add(state);
-  
-    	
-    	List frontier = new ArrayList<GameState>(); 
-    	frontier.add(state); // include the initial state
     
-    	
-    	
-    	//closed list
-    	List closedList = new ArrayList<GameState>();
-    	
-    	List M = new ArrayList<GameState>();
-    
-    	
-    	GameState test;
-    	
-    	
-    	int G = 0;
-    	int F = 0;
-    	int H = 0;
-    	
-    	GameState n = null;
-
-         
-        while(frontier.isEmpty() == false){
-
-        	
-        	n = (GameState) frontier.get(0);
-        	frontier.remove(n);
-        	closedList.add(n);
-        	
-        	
-        	
-        	if(n.isGoalState()){
- 
-        		//n.printState();
-        		return closedList;   //this needs modifying
-        		//break;
-        		
-        	}
-        	
-        	//	int lowestF = manhattanDistance(frontier.get(0)) + initialtoNodeDistance(frontier.get(0));
-        	
-        	int lowestFValue = 0;
-        	GameState lowestFValNode = null;
-        	//M = explored nodes
-        	
-        	//for each neighbour(legal neighbour)
-        	//expand nodes
-        	M = getLegalActions(n);			//neighbours      legalActions.get(i) = neighbour
-        	for(int i = 0; i < M.size(); i++){
-        		//add every (legal) explored node to the frontier
-        		if(frontier.contains(M.get(i))){
-        			continue;
-        		}
-        		
-        		frontier.add(M.get(i));
-        		
-        		if(!graph.contains(M.get(i))){		//installs leafs
-        			graph.add(M.get(i));
-        		}
-        		
-        		
-        		//for each explored node work out the cost from currentNode (n);
-        		G = initialtoNodeDistance((GameState)M.get(i));
-        		
-        		//for each work out the heuristic value
-        		H = manhattanDistance((GameState)M.get(i));
-        		
-        		//calculate f_value for all explored nodes
-        		F = G + H;
-        		
-        		//find the lowestF
-        		if(i == 0){
-        			lowestFValue = F;
-        			lowestFValNode = (GameState) M.get(0);
-        		}else if(F < lowestFValue){
-        			lowestFValue = F;
-        			lowestFValNode = (GameState) M.get(0);
-        		}
-        	}
-        	//add lowestFValNode to frontier
-        	frontier.add(lowestFValNode);
-        	closedList.remove(lowestFValNode);
-        	
-        }
-        
-        
-        
-    	return frontier;
-    	
-	}
-    
-    
-    */
-    
-/*    public List<GameState> EvaluateFn2(GameState state){
-    	
-    	List openList = new ArrayList<GameState>();
-    	openList.add(state);
-    	
-    	//creates a graph with the initial state
-    	List graph = new ArrayList<GameState>();
-    	List graph_g_score = new ArrayList<Integer>();
-    	graph.add(state);
-    	graph_g_score.add(0);
-    	
-    	
-    	List closedList = new ArrayList<GameState>();
-    	
-    	List neibours = new ArrayList<GameState>();
-    	List<GameState> parentNodesOfNeibours = new ArrayList<GameState>();
-    	List<Integer> g_scores = new ArrayList<>();
-    	
-    	int currentGScore;
-    	
-    	GameState current;
-    	
-    	//this may need to be changed to while we haven't found goal state.
-    	while(openList.isEmpty() == false){
-    		//getOptimalNode uses manhattan distance
-    		current = getOptimalNode(openList);
-    		if(current.isGoalState()){
-    			current.printState();
-    			System.out.println("done");
-    		//	System.out.println("size: " + parentNodesOfNeibours.size());
-    			System.out.println("Open size: " + openList.size());
-    			System.out.println("Closed size: " + closedList.size());
-    			System.out.println("graph_g_score size: " + graph_g_score.size());
-    			System.out.println("graph size: " + graph.size());
-    			
-    		//	return openList;
-    			return parentNodesOfNeibours;
-    		}else{
-    			closedList.add(current);
-    			openList.remove(current);   //this may not work
-    			
-    			neibours = getLegalActions(current);
-    			
-    			currentGScore = initialtoNodeDistance(current);
-    			
-    			//sets an array containing parent nodes for each;
-    			//sets g Scored for each
-    
-    		
-    			for(int k = 0; k < neibours.size(); k ++){
-    				
-    				
-    				if(closedList.contains(neibours.get(k)) && currentGScore < initialtoNodeDistance((GameState) neibours.get(k))){
-    					g_scores.add(k, currentGScore);
-    					parentNodesOfNeibours.add(k, current);
-    					//update the neibours
-    					//change neibours parent to our current node;
-    					
-    				}else if(openList.contains(neibours.get(k)) && currentGScore < initialtoNodeDistance((GameState) neibours.get(k))){
-    					g_scores.add(k, currentGScore);
-    					parentNodesOfNeibours.add(k, current);
-    					//update the neibours
-    					//change neibours parent to our current node;
-    					
-    				}else{
-    					openList.add(neibours.get(k));
-    					g_scores.add(k, initialtoNodeDistance((GameState) neibours.get(k)));
-    					
-    				}
-    			
-    				
-    				
-    				
-    				
-    				
-    			}
-    			
-    			
-    			
-    			
-    			
-    		}
-    		
-    		
-    		
-    		
-    	}
-    	
-    	
-    	
-    	
-    	
-    	return null;
-    }
-    
-    
-    
-    */
-    
-    public List<GameState> EvaluateFn3(GameState state){
+    public List<GameState> Evaluate(GameState state){
     		
     	List<GameState> openList = new ArrayList<GameState>();
     	List<GameState> closedList = new ArrayList<GameState>();
@@ -300,32 +103,13 @@ public class ComputerPlayer {
     				openList.add(LegalActions.get(k));
     			}
     			closedList.add(lowestF);
-    			
-    			
-    			
+
     		}
-    		
-    		
-    		
-    		
-    
+
     	}
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
+
     	return path;
-    	
-    	
-    	
+ 	
     }
 /*    public void checkBlockPosition(GameState state){
     	state.
@@ -349,25 +133,7 @@ public class ComputerPlayer {
     }
     
     
-    
-    
-    
-/*	if(closedList.contains(M.get(i))){
-		continue;
-	}
-	temp_g_score = initialtoNodeDistance(n) + distanceBetween(n, (GameState) M.get(i)); //this may be bugged.
-	
-	if(!frontier.contains(M.get(i)) || temp_g_score < g_score){
-		
-		
-		g_score = temp_g_score;
-		f_score = initialtoNodeDistance((GameState) M.get(i)) + manhattanDistance((GameState) M.get(i));
-		
-		if(!frontier.contains(M.get(i))){
-			frontier.add(M.get(i));
-		}
-		
-	}		*/
+
    
     public List<GameState> getLegalActions(GameState state){
     	//A list containing legal leaf-nodes from given state.
@@ -391,39 +157,10 @@ public class ComputerPlayer {
     	}
     		
     	
-    	
-    	
-    	
-    	
-    	
     	return LegalStates;
     }
-    //this is used to return the most optimal leaf-node branching from the given node/state.
-/*    public GameState getOptimalLeaf(GameState state){
-    	List<GameState> legalNodes = getLegalActions(state);
-    	int h = 0;
-    	int g = 0;
-    	
-    	int lowestF = manhattanDistance(legalNodes.get(0)) + initialtoNodeDistance(legalNodes.get(0));
-    	//sets state with lowest F to the initial node in the legalNodes List
-    	GameState lowestConnectedNode = legalNodes.get(0);
-    	
-    	for(int i = 0; i < legalNodes.size(); i++){
-    		/// h(n) estimation to go from the n to a goal state
-    		h = manhattanDistance(legalNodes.get((i)));
-    		/// g(n) cost of the path from the initial state to node n (assuming each step equates to a cost of 1)
-    		g = initialtoNodeDistance(legalNodes.get(i));
-    		
-    		if(h + g < lowestF){
-    			lowestF = h + g;
-    			lowestConnectedNode = legalNodes.get(i);
-    			
-    		}
-    		
-    	}
-    	return lowestConnectedNode;
-    }*/
-    
+
+
     
     //this is used to get the most optimal node given a list.
     public GameState getOptimalNode(List<GameState> frontier){
@@ -544,7 +281,7 @@ public class ComputerPlayer {
         long t1 = System.currentTimeMillis();
         ComputerPlayer player = new ComputerPlayer(state);  
         //List<GameState> solution = player.getSolution(); //OLD CODE
-        List<GameState> mySolution = player.EvaluateFn3(state);
+        List<GameState> mySolution = player.Evaluate(state);
         long t2 = System.currentTimeMillis();
         System.out.println("Time: " + (t2-t1));
         player.showSolution(mySolution);

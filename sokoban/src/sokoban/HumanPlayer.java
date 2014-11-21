@@ -80,16 +80,28 @@ public class HumanPlayer implements KeyListener{
 
             
         	//System.out.println("lowest manhattan distance: " + manhattendist);
-            System.out.println("Distance to start node   / g_score: " + initialtoNodeDistance(newState));
-            System.out.println("Distance to closest goal / h_score: " + manhattanDistance(newState));
+/*            System.out.println("Distance to start node   / g_score: " + initialtoNodeDistance(newState));
+            System.out.println("Distance to closest goal / h_score: " + manhattanDistance(newState));*/
             temp_g = manhattanDistance(newState);
             g = temp_g += cost;
-            System.out.println("f Value                           : " + f_distance(initialtoNodeDistance(newState), manhattanDistance(newState)));
+/*            System.out.println("f Value                           : " + f_distance(initialtoNodeDistance(newState), manhattanDistance(newState)));
          //   System.out.println("Size of legal actions             : " + getLegalActions(newState));
             for(int i = 0;i < getLegalActions(newState).size(); i++){
             	System.out.println(getLegalActions(newState).get(i));
             	System.out.println("NODE F DISTANCE: " + f_distance(initialtoNodeDistance(getLegalActions(newState).get(i)) + temp_g, manhattanDistance(getLegalActions(newState).get(i))) );
             }
+          */
+            //evaluation block state for player instead of block:::
+            System.out.println("Block state: " + newState.isAgainstWall(newState.playerRow, newState.playerCol));
+            
+            //simple corner Checker
+            if(newState.isAgaintWall = 1 && )
+            
+            
+            //evaluation of block state north.
+        //    System.out.println("BLOCK STATES: " + newState.isFailSafe(newState.goalPositions.get(0).row, newState.goalPositions.get(0).col));
+            
+        //    System.out.println("Get goal positions: " + newState.goalPositions.get(0).col);
          //   System.out.println(test + " " + test2);
           //  System.out.println("Number of goal positions: " + state.goalPositions.size());
             display.updateState(newState);
