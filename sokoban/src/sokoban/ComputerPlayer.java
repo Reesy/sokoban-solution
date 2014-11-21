@@ -327,8 +327,13 @@ public class ComputerPlayer {
     	
     	
     }
-    
-
+/*    public void checkBlockPosition(GameState state){
+    	state.
+    	
+    	
+    	
+    }
+*/
 	public List<GameState>reverseList(List<GameState> inState){
     	List<GameState> outState = new ArrayList();
     	
@@ -526,7 +531,7 @@ public class ComputerPlayer {
         for (GameState st : solution) {            
             display.updateState((GameState) st);
             try {
-                Thread.sleep(500); 
+                Thread.sleep(5); 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
