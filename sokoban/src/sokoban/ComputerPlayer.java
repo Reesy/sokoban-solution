@@ -13,6 +13,13 @@ import java.util.List;
  */
 public class ComputerPlayer {
     
+	/*
+	 * 
+	 * Please note that in this I use the words node and state interchangeably.
+	 * 
+	 */
+	
+	
     GameDisplay display;
     int initialPlayerStateX;
     int initialPlayerStateY;
@@ -30,34 +37,67 @@ public class ComputerPlayer {
         //  frontier = EvaluateFn(state, frontier);
     	//openList
     	List frontier = new ArrayList<GameState>(); 
+    	frontier.add(state); // include the initial state
     	//closes list
     	List closedList = new ArrayList<GameState>();
-    		
+    	
+    	List legalActions = new ArrayList<GameState>();
+    	
+    	int g_score = 0;
+    	
+    	int f_score = g_score + manhattanDistance(state);
+    	
+    	int temp_g_score;
+    	GameState current = null;
+    	
+    	
+   //int f_score 
     	//initialise frontier
-    	
-    	frontier.add(state);
-    	
-    	
-        int[] pathCost = {0};
-          
-        int[] estimatedPathCost = null;
-        estimatedPathCost[0] = pathCost[0] + manhattanDistance(state); 
+    //	frontier.add(state);
+
           
          
         while(frontier.isEmpty() == false){
         	//frontier.size();
         	//gets last element
+        	current = getOptimalNode(frontier);
+        	
+        	if(current.isGoalState()){
+        		System.out.println("finished");
+        		
+        	}
+        	
+        	frontier.remove(current);
+        	closedList.add(current);
+        	//for each neighbour(legal neighbour)
+        	
+        	legalActions = getLegalActions(current);
+        		for(int i = 0; i < legalActions.size(); i++){
+        			if(closedList.contains(legalActions.get(i))){
+        				continue;
+        			}
+        			temp_g_score = initialtoNodeDistance(current) + distanceBetween(current, (GameState) legalActions.get(i)); //this may be bugged.
+        			
+        			
+        			
+        			
+        		}		
+        	
+        	//next
+        	
+        	
+        	
         	closedList.add(frontier.get(0));
         	GameState currentState = (GameState) frontier.get(0);    //might be bugged!
         	frontier.remove(0);
         	
         
         	
-        	if(state.isGoalState()){
+       /* 	if(state.isGoalState()){
         		return frontier;
           	}else{
           		//this checks the Currently active node for the most optimum state. 
-          		frontier.add(getOptimalLeaf(currentState));
+          		frontier.add(getOptimalLeaf(currentState));*/
           		
           		
           		
@@ -110,7 +150,7 @@ public class ComputerPlayer {
     	
     	return LegalStates;
     }
-    //optimal leaf with manhattan distance.
+    //this is used to return the most optimal leaf-node branching from the given node/state.
     public GameState getOptimalLeaf(GameState state){
     	List<GameState> legalNodes = getLegalActions(state);
     	int h = 0;
@@ -135,6 +175,38 @@ public class ComputerPlayer {
     	}
     	return lowestConnectedNode;
     }
+    
+    
+    //this is used to get the most optimal node given a list.
+    public GameState getOptimalNode(List<GameState> frontier){
+    	
+    	int h = 0;
+    	int g = 0;
+    	
+    	
+    	int lowestF = manhattanDistance(frontier.get(0)) + initialtoNodeDistance(frontier.get(0));
+    	GameState lowestConnectedNode = frontier.get(0);
+    	
+    	for(int i = 0; i < frontier.size(); i++){
+    		/// h(n) estimation to go from the n to a goal state
+    		h = manhattanDistance(frontier.get((i)));
+    		/// g(n) cost of the path from the initial state to node n (assuming each step equates to a cost of 1)
+    		g = initialtoNodeDistance(frontier.get(i));
+    		
+    		if(h + g < lowestF){
+    			lowestF = h + g;
+    			lowestConnectedNode = frontier.get(i);
+    			
+    		}
+    		
+    	}
+    	return lowestConnectedNode;
+    	
+    	
+    
+    }
+    
+    
     //this is extremely inefficient and may be removed when i work out how to do this.
     public int initialtoNodeDistance(GameState stateN){
     	
@@ -147,6 +219,24 @@ public class ComputerPlayer {
     	return currentXDist + currentYDist;
     }
     
+    public int distanceBetween(GameState fromState, GameState toState){
+    	
+    	int fromStateX = fromState.playerCol;
+    	int fromStateY = fromState.playerRow;
+    	
+    	int toStateX = toState.playerCol;
+    	int toStateY = toState.playerRow;
+    	
+    	int XDist = Math.abs( toStateX - fromStateX );
+    	int YDist = Math.abs(toStateY - fromStateY );
+    	
+    	
+    	return XDist + YDist;
+    	
+    	
+    	
+    	
+    }
     //takes position and a goal returns the number of moves to the nearest goal position.
     public int manhattanDistance(GameState state){
     	//gets player position
