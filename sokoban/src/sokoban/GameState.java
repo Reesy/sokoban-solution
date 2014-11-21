@@ -15,7 +15,12 @@ import java.util.List;
  * @author steven
  */
 public class GameState{
-
+	
+	
+	private GameState parentState;
+	private int f;
+	private int g;
+	private int h;
     private char[][] state;
     private int width;
     private int height;
@@ -279,5 +284,49 @@ public class GameState{
         }
     }
 
+	public void setParent(GameState state){
+		this.parentState = state;
+		
+	}
+	
+	public void setF(int newF){
+		this.f = newF;
+	}
 
+	public void setG(int newG){
+		
+		this.g = newG;
+	}
+	
+	
+	public void setH(int newH){
+		this.h = newH;
+	}
+
+	
+	public GameState getParent(){
+		
+		return this.parentState;
+		
+	}
+	public int getF(){
+		
+		
+		return this.f;
+	}
+	
+	public int getG(){
+		
+		return this.g;
+		
+	}
+	
+	public int getH(){
+		
+		return this.h;
+		
+	}
+	
+	
+	
 }

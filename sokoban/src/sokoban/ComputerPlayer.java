@@ -5,6 +5,7 @@
 package sokoban;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ public class ComputerPlayer {
     int initialPlayerStateX;
     int initialPlayerStateY;
     
-    public ComputerPlayer(MyGameState MyState){
+    public ComputerPlayer(GameState MyState){
         display = new GameDisplay(MyState);
         initialPlayerStateX = MyState.playerCol;
         initialPlayerStateY = MyState.playerRow;
@@ -229,13 +230,17 @@ public class ComputerPlayer {
     
     */
     
-    public List<MyGameState> EvaluateFn3(MyGameState state){
+    public List<GameState> EvaluateFn3(GameState state){
     		
-    	List<MyGameState> openList = new ArrayList<MyGameState>();
-    	List<MyGameState> closedList = new ArrayList<MyGameState>();
+    	List<GameState> openList = new ArrayList<GameState>();
+    	List<GameState> closedList = new ArrayList<GameState>();
+    	List<GameState> path = new ArrayList<GameState>();
     	
-    	MyGameState lowestF = null;
-    	List<MyGameState> LegalActions = null;
+    	GameState initialState = state;
+    	GameState tempState = null;
+    	
+    	GameState lowestF;
+    	List<GameState> LegalActions = null;
     	
     	//adds initial state to the openList
     	openList.add(state);
@@ -246,17 +251,34 @@ public class ComputerPlayer {
     	//	break;
     		openList.remove(lowestF);
     		LegalActions = getLegalActions(lowestF);
-    		state.
     		
+    	
+    	
     		//set parents of successors
     		for(int i = 0; i < LegalActions.size(); i ++){
     			LegalActions.get(i).setParent(lowestF);
+    			
+    			
     		}
     		
     		for(int k = 0; k < LegalActions.size(); k++){
     			if(LegalActions.get(k).isGoalState()){
+    				
+    				//reconstruct path.
+    				tempState = LegalActions.get(k);
+    		
+        			while(tempState != initialState){
+        				path.add(tempState);
+        				tempState.printState();
+        				tempState = tempState.getParent();
+        			}
+        			
+        			GameState curNode;
+        			int posCounter = 0;
+        	
+        			
     				System.out.println("finished");
-    				return openList;
+    				return reverseList(path);
     			}
     			
     			
@@ -264,6 +286,20 @@ public class ComputerPlayer {
     			LegalActions.get(k).setG(lowestF.getG() + distanceBetween(LegalActions.get(k), lowestF));
     			LegalActions.get(k).setH(manhattanDistance(LegalActions.get(k)));
     			LegalActions.get(k).setF(LegalActions.get(k).getG() + LegalActions.get(k).getH());
+    			
+    			
+    			if(openList.contains(LegalActions.get(k))){
+    				
+    				
+    				
+    			}
+    			if(closedList.contains(LegalActions.get(k))){
+    				
+    				
+    			}else{
+    				openList.add(LegalActions.get(k));
+    			}
+    			closedList.add(lowestF);
     			
     			
     			
@@ -286,13 +322,26 @@ public class ComputerPlayer {
     	
     	
     	
-    	return openList;
+    	return path;
     	
     	
     	
     }
     
-    
+
+	public List<GameState>reverseList(List<GameState> inState){
+    	List<GameState> outState = new ArrayList();
+    	
+    	int count = inState.size() -1;
+		for(int j = (count); j > -1; j--){
+		
+				outState.add(inState.get(j));
+		}
+    	
+    	
+    	
+    	return outState;
+    }
     
     
     
@@ -315,11 +364,11 @@ public class ComputerPlayer {
 		
 	}		*/
    
-    public List<GameState> getLegalActions(MyGameState state){
+    public List<GameState> getLegalActions(GameState state){
     	//A list containing legal leaf-nodes from given state.
     	
     	List<GameState> LegalStates = new ArrayList<GameState>(); 
-    	LegalStates.add(state.moveLeft());
+    	//LegalStates.add(state.moveLeft());
     	//LegalStates.add(state); // may need to remove
     	
     	
@@ -345,14 +394,14 @@ public class ComputerPlayer {
     	return LegalStates;
     }
     //this is used to return the most optimal leaf-node branching from the given node/state.
-/*    public MyGameState getOptimalLeaf(MyGameState state){
-    	List<MyGameState> legalNodes = getLegalActions(state);
+/*    public GameState getOptimalLeaf(GameState state){
+    	List<GameState> legalNodes = getLegalActions(state);
     	int h = 0;
     	int g = 0;
     	
     	int lowestF = manhattanDistance(legalNodes.get(0)) + initialtoNodeDistance(legalNodes.get(0));
     	//sets state with lowest F to the initial node in the legalNodes List
-    	MyGameState lowestConnectedNode = legalNodes.get(0);
+    	GameState lowestConnectedNode = legalNodes.get(0);
     	
     	for(int i = 0; i < legalNodes.size(); i++){
     		/// h(n) estimation to go from the n to a goal state
@@ -372,14 +421,14 @@ public class ComputerPlayer {
     
     
     //this is used to get the most optimal node given a list.
-    public MyGameState getOptimalNode(List<MyGameState> frontier){
+    public GameState getOptimalNode(List<GameState> frontier){
     	
     	int h = 0;
     	int g = 0;
     	
     	
     	int lowestF = manhattanDistance(frontier.get(0)) + initialtoNodeDistance(frontier.get(0));
-    	MyGameState lowestConnectedNode = frontier.get(0);
+    	GameState lowestConnectedNode = frontier.get(0);
     	
     	for(int i = 0; i < frontier.size(); i++){
     		/// h(n) estimation to go from the n to a goal state
@@ -402,7 +451,7 @@ public class ComputerPlayer {
     
     
     //this is extremely inefficient and may be removed when i work out how to do this.
-    public int initialtoNodeDistance(MyGameState stateN){
+    public int initialtoNodeDistance(GameState stateN){
     	
     	int currentPX = stateN.playerCol;
     	int currentPY = stateN.playerRow;
@@ -413,7 +462,7 @@ public class ComputerPlayer {
     	return currentXDist + currentYDist;
     }
     
-    public int distanceBetween(MyGameState fromState, MyGameState toState){
+    public int distanceBetween(GameState fromState, GameState toState){
     	
     	int fromStateX = fromState.playerCol;
     	int fromStateY = fromState.playerRow;
@@ -432,7 +481,7 @@ public class ComputerPlayer {
     	
     }
     //takes position and a goal returns the number of moves to the nearest goal position.
-    public int manhattanDistance(MyGameState state){
+    public int manhattanDistance(GameState state){
     	//gets player position
     	int playerX = state.playerCol;    //this gets the player position on the x Axis
     	int playerY = state.playerRow; 	  //this gets the player position on the y Axis
@@ -467,15 +516,15 @@ public class ComputerPlayer {
     	return manhattendist;
     }
    
-    public List<MyGameState> getSolution(){
+    public List<GameState> getSolution(){
 
     	// your code goes here ...
     	return null;
     }
     
-    public void showSolution(List<MyGameState> solution) {               
-        for (MyGameState st : solution) {            
-            display.updateState((MyGameState) st);
+    public void showSolution(List<GameState> solution) {               
+        for (GameState st : solution) {            
+            display.updateState((GameState) st);
             try {
                 Thread.sleep(500); 
             } catch (InterruptedException e) {
@@ -486,11 +535,11 @@ public class ComputerPlayer {
     
     public static void main(String[] args) throws Exception{
        // GameState state = args.length==0?new GameState("src/levels/level6.txt"):new GameState(args[0]);    
-        MyGameState state = args.length==0?new MyGameState("src/levels/level6.txt"):new MyGameState(args[0]);  
+        GameState state = args.length==0?new GameState("src/levels/level6.txt"):new GameState(args[0]);  
         long t1 = System.currentTimeMillis();
         ComputerPlayer player = new ComputerPlayer(state);  
         //List<GameState> solution = player.getSolution(); //OLD CODE
-        List<MyGameState> mySolution = player.EvaluateFn3(state);
+        List<GameState> mySolution = player.EvaluateFn3(state);
         long t2 = System.currentTimeMillis();
         System.out.println("Time: " + (t2-t1));
         player.showSolution(mySolution);
