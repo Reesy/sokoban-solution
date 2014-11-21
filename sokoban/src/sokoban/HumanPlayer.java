@@ -18,11 +18,15 @@ public class HumanPlayer implements KeyListener{
 
     GameState state;
     GameDisplay display;
+    int initialPlayerStateX;
+    int initialPlayerStateY;
     
     public HumanPlayer(GameState state){
         this.state=state;
         display = new GameDisplay(state);
         display.addKeyListener(this);
+        initialPlayerStateX = state.playerCol;
+        initialPlayerStateY = state.playerRow;
     }
     
     public void keyTyped(KeyEvent e) {        
@@ -42,8 +46,8 @@ public class HumanPlayer implements KeyListener{
         if(newState!=null){
             state=newState;
 //            state.printState();
-            System.out.println(state.isGoalState());
-            System.out.println(state.playerCol + " " + state.playerRow); 
+         //   System.out.println(state.isGoalState());
+          //  System.out.println(state.playerCol + " " + state.playerRow); 
        //     int test = state.goalPositions(0);
             
             int test;
@@ -115,17 +119,26 @@ public class HumanPlayer implements KeyListener{
         		
         	}
             
-        	System.out.println("lowest manhattan distance: " + manhattendist);
+        	//System.out.println("lowest manhattan distance: " + manhattendist);
+            System.out.println(initialtoNodeDistance(newState));
             
             
-            
-            System.out.println(test + " " + test2);
-            System.out.println("Number of goal positions: " + state.goalPositions.size());
+         //   System.out.println(test + " " + test2);
+          //  System.out.println("Number of goal positions: " + state.goalPositions.size());
             display.updateState(newState);
         }
     }
 
-    
+    public int initialtoNodeDistance(GameState stateN){
+    	
+    	int currentPX = stateN.playerCol;
+    	int currentPY = stateN.playerRow;
+    	
+    	int currentXDist = Math.abs(currentPX - initialPlayerStateX);
+    	int currentYDist = Math.abs(currentPY - initialPlayerStateY);
+    	
+    	return currentXDist + currentYDist;
+    }
     public void keyReleased(KeyEvent e) {        
     }
 

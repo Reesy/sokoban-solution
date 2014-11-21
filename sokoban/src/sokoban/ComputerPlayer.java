@@ -30,103 +30,226 @@ public class ComputerPlayer {
         initialPlayerStateY = state.playerRow;
         
     }
-    public List<GameState> EvaluateFn(GameState state){
+/*    public List<GameState> EvaluateFn(GameState state){
+
     	
-        //  GameState tempState;
-        //  int limit = 5;
-        //  frontier = EvaluateFn(state, frontier);
-    	//openList
+    	List graph = new ArrayList<GameState>();
+    	graph.add(state);
+  
+    	
     	List frontier = new ArrayList<GameState>(); 
     	frontier.add(state); // include the initial state
-    	//closes list
+    
+    	
+    	
+    	//closed list
     	List closedList = new ArrayList<GameState>();
     	
-    	List legalActions = new ArrayList<GameState>();
+    	List M = new ArrayList<GameState>();
+    
     	
-    	int g_score = 0;
-    	
-    	int f_score = g_score + manhattanDistance(state);
-    	
-    	int temp_g_score;
-    	GameState current = null;
+    	GameState test;
     	
     	
-   //int f_score 
-    	//initialise frontier
-    //	frontier.add(state);
+    	int G = 0;
+    	int F = 0;
+    	int H = 0;
+    	
+    	GameState n = null;
 
-          
          
         while(frontier.isEmpty() == false){
-        	//frontier.size();
-        	//gets last element
-        	current = getOptimalNode(frontier);
+
         	
-        	if(current.isGoalState()){
-        		System.out.println("finished");
+        	n = (GameState) frontier.get(0);
+        	frontier.remove(n);
+        	closedList.add(n);
+        	
+        	
+        	
+        	if(n.isGoalState()){
+ 
+        		//n.printState();
+        		return closedList;   //this needs modifying
+        		//break;
         		
         	}
         	
-        	frontier.remove(current);
-        	closedList.add(current);
+        	//	int lowestF = manhattanDistance(frontier.get(0)) + initialtoNodeDistance(frontier.get(0));
+        	
+        	int lowestFValue = 0;
+        	GameState lowestFValNode = null;
+        	//M = explored nodes
+        	
         	//for each neighbour(legal neighbour)
+        	//expand nodes
+        	M = getLegalActions(n);			//neighbours      legalActions.get(i) = neighbour
+        	for(int i = 0; i < M.size(); i++){
+        		//add every (legal) explored node to the frontier
+        		if(frontier.contains(M.get(i))){
+        			continue;
+        		}
+        		
+        		frontier.add(M.get(i));
+        		
+        		if(!graph.contains(M.get(i))){		//installs leafs
+        			graph.add(M.get(i));
+        		}
+        		
+        		
+        		//for each explored node work out the cost from currentNode (n);
+        		G = initialtoNodeDistance((GameState)M.get(i));
+        		
+        		//for each work out the heuristic value
+        		H = manhattanDistance((GameState)M.get(i));
+        		
+        		//calculate f_value for all explored nodes
+        		F = G + H;
+        		
+        		//find the lowestF
+        		if(i == 0){
+        			lowestFValue = F;
+        			lowestFValNode = (GameState) M.get(0);
+        		}else if(F < lowestFValue){
+        			lowestFValue = F;
+        			lowestFValNode = (GameState) M.get(0);
+        		}
+        	}
+        	//add lowestFValNode to frontier
+        	frontier.add(lowestFValNode);
+        	closedList.remove(lowestFValNode);
         	
-        	legalActions = getLegalActions(current);
-        		for(int i = 0; i < legalActions.size(); i++){
-        			if(closedList.contains(legalActions.get(i))){
-        				continue;
-        			}
-        			temp_g_score = initialtoNodeDistance(current) + distanceBetween(current, (GameState) legalActions.get(i)); //this may be bugged.
-        			
-        			
-        			
-        			
-        		}		
-        	
-        	//next
-        	
-        	
-        	
-        	closedList.add(frontier.get(0));
-        	GameState currentState = (GameState) frontier.get(0);    //might be bugged!
-        	frontier.remove(0);
-        	
-        
-        	
-       /* 	if(state.isGoalState()){
-        		return frontier;
-          	}else{
-          		//this checks the Currently active node for the most optimum state. 
-          		frontier.add(getOptimalLeaf(currentState));*/
-          		
-          		
-          		
-          		
-          		
-          		
-          	//	for(int legalSearch = 0; legalSearch < getLegalActions(state).size(); legalSearch++){
-          		//	
-          		//	
-          		//	
-          	//	}
-          		
-          		
-          		
-          		
-          		
-          		
-          	}  	
         }
+        
+        
+        
     	return frontier;
     	
 	}
     
+    
+    */
+    
+    public List<GameState> EvaluateFn2(GameState state){
+    	
+    	List openList = new ArrayList<GameState>();
+    	openList.add(state);
+    	
+    	List closedList = new ArrayList<GameState>();
+    	
+    	List neibours = new ArrayList<GameState>();
+    	List parentNodesOfNeibours = new ArrayList<GameState>();
+    	List<Integer> g_scores = new ArrayList<>();
+    	
+    	int currentGScore;
+    	
+    	GameState current;
+    	
+    	//this may need to be changed to while we haven't found goal state.
+    	while(openList.isEmpty() == false){
+    		//getOptimalNode uses manhattan distance
+    		current = getOptimalNode(openList);
+    		if(current.isGoalState()){
+    			current.printState();
+    			System.out.println("done");
+    			System.out.println("size" + parentNodesOfNeibours.size());
+    		//	return openList;
+    			return parentNodesOfNeibours;
+    		}else{
+    			closedList.add(current);
+    			openList.remove(current);   //this may not work
+    			
+    			neibours = getLegalActions(current);
+    			
+    			currentGScore = initialtoNodeDistance(current);
+    			
+    			//sets an array containing parent nodes for each;
+    			//sets g Scored for each
+    			for(int j = 0; j < neibours.size(); j ++){
+    				//sets parents of nodes
+    				parentNodesOfNeibours.add(j, current);
+    				//sets g scores for all neibour nodes
+    				g_scores.add(j, initialtoNodeDistance((GameState) neibours.get(j)));
+    			}
+    		
+    			for(int k = 0; k < neibours.size(); k ++){
+    				
+    				
+    				if(closedList.contains(neibours.get(k)) && currentGScore < initialtoNodeDistance((GameState) neibours.get(k))){
+    					g_scores.add(k, currentGScore);
+    					parentNodesOfNeibours.add(k, current);
+    					//update the neibours
+    					//change neibours parent to our current node;
+    					
+    				}else if(openList.contains(neibours.get(k)) && currentGScore < initialtoNodeDistance((GameState) neibours.get(k))){
+    					g_scores.add(k, currentGScore);
+    					parentNodesOfNeibours.add(k, current);
+    					//update the neibours
+    					//change neibours parent to our current node;
+    					
+    				}else{
+    					openList.add(neibours.get(k));
+    					g_scores.add(k, initialtoNodeDistance((GameState) neibours.get(k)));
+    					
+    				}
+    			
+    				
+    				
+    				
+    				
+    				
+    			}
+    			
+    			
+    			
+    			
+    			
+    		}
+    		
+    		
+    		
+    		
+    	}
+    	
+    	
+    	
+    	
+    	
+    	return null;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+/*	if(closedList.contains(M.get(i))){
+		continue;
+	}
+	temp_g_score = initialtoNodeDistance(n) + distanceBetween(n, (GameState) M.get(i)); //this may be bugged.
+	
+	if(!frontier.contains(M.get(i)) || temp_g_score < g_score){
+		
+		
+		g_score = temp_g_score;
+		f_score = initialtoNodeDistance((GameState) M.get(i)) + manhattanDistance((GameState) M.get(i));
+		
+		if(!frontier.contains(M.get(i))){
+			frontier.add(M.get(i));
+		}
+		
+	}		*/
    
     public List<GameState> getLegalActions(GameState state){
     	//A list containing legal leaf-nodes from given state.
     	
-    	List<GameState> LegalStates = null; 
-    	
+    	List LegalStates = new ArrayList<GameState>(); 
+    	//LegalStates.add(state); // may need to remove
     	
     	
     	if(state.moveLeftLegal() == true){
@@ -136,7 +259,7 @@ public class ComputerPlayer {
     		LegalStates.add(state.moveUp());
     	}
     	if(state.moveRightLegal() == true){
-    		LegalStates.add(state.moveUp());
+    		LegalStates.add(state.moveRight());
     	}
     	if(state.moveDownLegal() == true){
     		LegalStates.add(state.moveDown());
@@ -274,9 +397,7 @@ public class ComputerPlayer {
     }
    
     public List<GameState> getSolution(){
-   
-        // frontier.add(state.moveUp());
-     //    frontier.add(state.moveLeft());
+
     	// your code goes here ...
     	return null;
     }
@@ -296,10 +417,11 @@ public class ComputerPlayer {
         GameState state = args.length==0?new GameState("src/levels/level6.txt"):new GameState(args[0]);        
         long t1 = System.currentTimeMillis();
         ComputerPlayer player = new ComputerPlayer(state);  
-        List<GameState> solution = player.getSolution();
+        //List<GameState> solution = player.getSolution(); //OLD CODE
+        List<GameState> mySolution = player.EvaluateFn2(state);
         long t2 = System.currentTimeMillis();
         System.out.println("Time: " + (t2-t1));
-        player.showSolution(solution);
+        player.showSolution(mySolution);
     }
      
 }
